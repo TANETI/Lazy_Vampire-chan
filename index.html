@@ -4,155 +4,478 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lazy Vampire-chan's Archives</title>
+    <link href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=Noto+Serif+KR:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --bg:       #070202;
+            --bg2:      #0f0404;
+            --surface:  #140707;
+            --border:   #2b0d0d;
+            --red:      #9e2a2b;
+            --red-glow: rgba(158,42,43,0.5);
+            --red-dim:  #600f10;
+            --text:     #e2c0c0;
+            --muted:    #6a4f4f;
+            --c-color:  #c97070;
+            --n-color:  #c0a0e0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
         body {
-            font-family: 'Garamond', 'Crimson Text', 'Malgun Gothic', serif;
-            background-color: #070202;
-            color: #e2c0c0;
-            margin: 0;
-            padding: 40px 20px;
+            font-family: 'Noto Serif KR', 'Garamond', serif;
+            background-color: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Vignette */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.7) 100%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Header */
+        header {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            padding: 64px 20px 48px;
+        }
+
+        header::after {
+            content: '';
+            display: block;
+            width: 280px;
+            height: 1px;
+            margin: 24px auto 0;
+            background: linear-gradient(90deg, transparent, var(--red), transparent);
         }
 
         h1 {
-            text-align: center;
-            color: #9e2a2b;
-            font-size: 2.8rem;
-            letter-spacing: 2px;
-            margin-bottom: 50px;
-            text-shadow: 0 0 10px rgba(158, 42, 43, 0.6), 0 0 20px rgba(255, 0, 0, 0.2);
+            font-family: 'IM Fell English', serif;
+            font-size: clamp(2rem, 5vw, 3.4rem);
+            color: var(--red);
+            letter-spacing: 3px;
+            text-shadow: 0 0 12px var(--red-glow), 0 0 32px rgba(255,0,0,0.15);
+            line-height: 1.2;
         }
+
+        header p {
+            margin-top: 12px;
+            font-size: 0.78rem;
+            color: var(--muted);
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            font-style: italic;
+        }
+
+        /* Main */
+        main {
+            position: relative;
+            z-index: 1;
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 0 24px 100px;
+        }
+
+        /* Section header */
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin: 60px 0 24px;
+        }
+
+        .section-cross { color: var(--red); font-size: 1rem; opacity: 0.7; }
 
         .section-title {
-            max-width: 1200px;
-            margin: 40px auto 20px auto;
-            font-size: 1.4rem;
-            color: #800000;
-            border-bottom: 1px dashed #400c0c;
-            padding-bottom: 8px;
-            letter-spacing: 1px;
+            font-family: 'IM Fell English', serif;
+            font-size: 1.25rem;
+            letter-spacing: 2px;
+            white-space: nowrap;
         }
 
+        .section-title.c { color: var(--c-color); }
+        .section-title.n { color: var(--n-color); }
+
+        .section-line {
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(90deg, var(--border) 60%, transparent);
+        }
+
+        .section-sub {
+            font-size: 0.72rem;
+            color: var(--muted);
+            letter-spacing: 0.1em;
+            white-space: nowrap;
+            font-style: italic;
+        }
+
+        /* Grid */
         .grid-container {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-            gap: 25px;
-            max-width: 1200px;
-            margin: 0 auto;
+            grid-template-columns: repeat(auto-fill, minmax(155px, 1fr));
+            gap: 18px;
         }
 
+        /* Card */
         .img-card {
-            background: #140707;
-            padding: 12px;
+            background: var(--surface);
+            border: 1px solid var(--border);
             border-radius: 6px;
-            border: 1px solid #230b0b;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.7);
-            text-align: center;
-            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-            position: relative;
             overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.35s cubic-bezier(0.25,0.8,0.25,1),
+                        border-color 0.35s,
+                        box-shadow 0.35s;
+            opacity: 0;
+            animation: card-in 0.5s ease forwards;
+        }
+
+        @keyframes card-in {
+            from { opacity: 0; transform: translateY(14px); }
+            to   { opacity: 1; transform: translateY(0); }
         }
 
         .img-card:hover {
-            transform: translateY(-6px) scale(1.06);
-            background: #1f0b0b;
-            border-color: #9e2a2b;
-            box-shadow: 0 10px 20px rgba(158, 42, 43, 0.4); 
+            transform: translateY(-6px) scale(1.05);
+            border-color: var(--red);
+            box-shadow: 0 10px 28px rgba(158,42,43,0.35);
         }
 
-        .img-card img {
-            width: 100%;
-            height: auto;
-            border-radius: 4px;
-            transition: transform 0.4s ease;
-            filter: grayscale(15%) brightness(85%);
-        }
-
-        .img-card:hover img {
-            transform: scale(1.04);
+        .img-card:hover .card-overlay { opacity: 1; }
+        .img-card:hover .card-img-wrap img {
+            transform: scale(1.06);
             filter: grayscale(0%) brightness(100%);
         }
+        .img-card:hover .card-label { color: var(--text); }
 
-        .img-card span {
-            display: block;
-            margin-top: 10px;
-            font-size: 0.9rem;
-            color: #8c7373;
-            transition: color 0.3s;
+        .card-img-wrap {
+            position: relative;
+            aspect-ratio: 3/4;
+            background: var(--bg2);
+            overflow: hidden;
         }
 
-        .img-card:hover span {
-            color: #e2c0c0;
+        .card-img-wrap img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.4s ease, filter 0.4s ease;
+            filter: grayscale(15%) brightness(82%);
+        }
+
+        .card-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(40,0,0,0.45);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .card-overlay span {
+            font-size: 1.6rem;
+            filter: drop-shadow(0 0 6px var(--red-glow));
+        }
+
+        .card-label {
+            padding: 9px 10px 10px;
+            font-size: 0.78rem;
+            color: var(--muted);
+            text-align: center;
+            transition: color 0.3s;
+            letter-spacing: 0.03em;
+            line-height: 1.4;
+        }
+
+        /* Lightbox */
+        #lightbox {
+            position: fixed;
+            inset: 0;
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #lightbox.active { display: flex; }
+
+        #lb-backdrop {
+            position: absolute;
+            inset: 0;
+            background: rgba(4,0,0,0.93);
+            backdrop-filter: blur(10px);
+        }
+
+        #lb-content {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 18px;
+            animation: lb-in 0.32s cubic-bezier(0.34,1.4,0.64,1);
+        }
+
+        @keyframes lb-in {
+            from { opacity: 0; transform: scale(0.82); }
+            to   { opacity: 1; transform: scale(1); }
+        }
+
+        #lb-img {
+            max-width: 88vw;
+            max-height: 80vh;
+            object-fit: contain;
+            border-radius: 6px;
+            border: 1px solid #3a0f0f;
+            box-shadow: 0 0 40px rgba(158,42,43,0.3), 0 24px 80px rgba(0,0,0,0.85);
+        }
+
+        #lb-label {
+            font-family: 'IM Fell English', serif;
+            font-size: 0.82rem;
+            color: var(--muted);
+            letter-spacing: 0.18em;
+            text-align: center;
+            padding: 6px 20px;
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+            background: rgba(20,7,7,0.6);
+            border-radius: 2px;
+            min-width: 160px;
+        }
+
+        #lb-close {
+            position: fixed;
+            top: 18px;
+            right: 22px;
+            z-index: 3;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            color: var(--text);
+            width: 38px;
+            height: 38px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        #lb-close:hover {
+            border-color: var(--red);
+            box-shadow: 0 0 10px var(--red-glow);
+        }
+
+        /* Bat canvas */
+        #bat-canvas {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 999;
         }
     </style>
 </head>
 <body>
 
+<header>
     <h1>🦇 Lazy Vampire-chan</h1>
+    <p>Personal Visual Archive — Character Reference Sheet</p>
+</header>
 
-    <div class="section-title">† Type C Collection (00 ~ 61)</div>
+<main>
+    <div class="section-header">
+        <span class="section-cross">†</span>
+        <h2 class="section-title c">Type C — 평상복</h2>
+        <div class="section-line"></div>
+        <span class="section-sub">Casual Wear · 00–61</span>
+    </div>
     <div id="grid-c" class="grid-container"></div>
 
-    <div class="section-title">† Type N Collection (01 ~ 61)</div>
+    <div class="section-header">
+        <span class="section-cross">†</span>
+        <h2 class="section-title n">Type N — 알몸</h2>
+        <div class="section-line"></div>
+        <span class="section-sub">Nude · 01–61</span>
+    </div>
     <div id="grid-n" class="grid-container"></div>
+</main>
 
-    <script>
-        // 요청해주신 인덱스용 이름 목록을 정확하게 매핑해두었어요
-        const nameMap = {
-            "00": "차원이동", // C타입 00번용 예외 처리
-            "01": "기본", "02": "미소", "03": "행복", "04": "분노", "05": "슬픔",
-            "06": "의문", "07": "경멸", "08": "피곤", "09": "삐짐", "10": "놀람",
-            "11": "부끄러움", "12": "유혹", "13": "황홀", "14": "두려움", "15": "사과",
-            "16": "우쭐", "17": "자위", "18": "자위절정", "19": "가슴애무", "20": "가슴빨기",
-            "21": "핑거링", "22": "핑거링2", "23": "대딸1", "24": "대딸2", "25": "대딸사정",
-            "26": "풋잡1", "27": "풋잡2", "28": "풋잡사정", "29": "정상위 준비", "30": "꼬리대딸",
-            "31": "꼬리대딸사정", "32": "펠라1", "33": "펠라2", "34": "구강사정", "35": "파이즈리",
-            "36": "파이즈리 사정", "37": "페이스시팅", "38": "정상위1", "39": "정상위2", "40": "정상위 사정",
-            "41": "후배위1", "42": "후배위2", "43": "후배위 사정", "44": "기승위1", "45": "기승위2",
-            "46": "기승위 사정", "47": "측위", "48": "측위 사정", "49": "좌위", "50": "좌위 사정",
-            "51": "대면좌위", "52": "대면좌위 사정", "53": "보지벌려서 보여주기", "54": "필로우 토크", "55": "뒤에서 흡혈",
-            "56": "팔에서 흡혈", "57": "대면좌위 흡혈", "58": "대면좌위 흡혈 사정", "59": "잠자기", "60": "딸기우유 마시기",
-            "61": "손가락 흡혈"
-        };
+<!-- Lightbox -->
+<div id="lightbox">
+    <div id="lb-backdrop"></div>
+    <button id="lb-close">✕</button>
+    <div id="lb-content">
+        <img id="lb-img" src="" alt="">
+        <div id="lb-label"></div>
+    </div>
+</div>
 
-        function pad(num) {
-            return num.toString().padStart(2, '0');
+<canvas id="bat-canvas"></canvas>
+
+<script>
+// ── Bat animation ──────────────────────────────────────────────────
+const canvas = document.getElementById('bat-canvas');
+const ctx    = canvas.getContext('2d');
+let bats = [];
+
+function resizeCanvas() { canvas.width = innerWidth; canvas.height = innerHeight; }
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
+
+class Bat {
+    constructor(x, y) {
+        this.x = x; this.y = y;
+        const a = (Math.random() * Math.PI) - Math.PI * 0.5 + (Math.random() - 0.5) * 1.8;
+        const spd = 3.5 + Math.random() * 5;
+        this.vx = Math.cos(a) * spd;
+        this.vy = Math.sin(a) * spd - 2.5;
+        this.size = 28 + Math.random() * 28;
+        this.life = 1;
+        this.decay = 0.007 + Math.random() * 0.008;
+        this.wing = Math.random() * Math.PI * 2;
+        this.wSpd = 0.22 + Math.random() * 0.18;
+        this.drift = (Math.random() - 0.5) * 0.05;
+    }
+    update() {
+        this.x += this.vx;
+        this.vy += 0.05;
+        this.vx += this.drift;
+        this.y += this.vy;
+        this.life -= this.decay;
+        this.wing += this.wSpd;
+    }
+    draw() {
+        if (this.life <= 0) return;
+        ctx.save();
+        ctx.globalAlpha = Math.min(this.life * 2, 0.88);
+        ctx.translate(this.x, this.y);
+        if (this.vx < 0) ctx.scale(-1, 1);
+        const s = this.size;
+        const w = Math.sin(this.wing);
+
+        ctx.fillStyle   = '#200808';
+        ctx.strokeStyle = 'rgba(158,42,43,0.55)';
+        ctx.lineWidth   = 0.7;
+
+        // Body
+        ctx.beginPath();
+        ctx.ellipse(0, 0, s * 0.27, s * 0.16, 0, 0, Math.PI * 2);
+        ctx.fill(); ctx.stroke();
+
+        // Wings
+        for (const side of [-1, 1]) {
+            ctx.beginPath();
+            ctx.moveTo(side * s * 0.1, 0);
+            ctx.bezierCurveTo(
+                side * s * 0.5, w * s * 0.55 - s * 0.18,
+                side * s * 0.9, w * s * 0.28,
+                side * s, w * s * 0.48
+            );
+            ctx.bezierCurveTo(
+                side * s * 0.55, w * s * 0.58,
+                side * s * 0.18, w * s * 0.18,
+                0, 0
+            );
+            ctx.fill(); ctx.stroke();
         }
+        ctx.restore();
+    }
+}
 
-        const maxIndex = 61;
+function spawnBats(x, y, n = 10) {
+    for (let i = 0; i < n; i++) bats.push(new Bat(x, y));
+}
 
-        // C 타입 생성 (00 ~ 61)
-        const gridC = document.getElementById('grid-c');
-        for (let i = 0; i <= maxIndex; i++) {
-            const numStr = pad(i);
-            const url = `https://taneti.github.io/PBV/C/${numStr}.png`;
-            const label = nameMap[numStr] ? nameMap[numStr] : `C_${numStr}`;
-            const displayName = `${numStr}. ${label}`;
-            
-            const card = document.createElement('div');
-            card.className = 'img-card';
-            card.innerHTML = `
-                <img src="${url}" alt="${displayName}" onerror="this.parentNode.style.display='none';">
-                <span>${displayName}</span>
-            `;
-            gridC.appendChild(card);
-        }
+(function loop() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    bats = bats.filter(b => b.life > 0);
+    bats.forEach(b => { b.update(); b.draw(); });
+    requestAnimationFrame(loop);
+})();
 
-        // N 타입 생성 (01 ~ 61)
-        const gridN = document.getElementById('grid-n');
-        for (let i = 1; i <= maxIndex; i++) {
-            const numStr = pad(i);
-            const url = `https://taneti.github.io/PBV/N/${numStr}.png`;
-            const label = nameMap[numStr] ? nameMap[numStr] : `N_${numStr}`;
-            const displayName = `${numStr}. ${label}`;
-            
-            const card = document.createElement('div');
-            card.className = 'img-card';
-            card.innerHTML = `
-                <img src="${url}" alt="${displayName}" onerror="this.parentNode.style.display='none';">
-                <span>${displayName}</span>
-            `;
-            gridN.appendChild(card);
-        }
-    </script>
+// ── Lightbox ──────────────────────────────────────────────────────
+const lightbox = document.getElementById('lightbox');
+const lbImg    = document.getElementById('lb-img');
+const lbLabel  = document.getElementById('lb-label');
+
+function openLightbox(url, label, cardEl) {
+    const r = cardEl.getBoundingClientRect();
+    spawnBats(r.left + r.width / 2, r.top + r.height / 2, 12);
+    lbImg.src = url;
+    lbLabel.textContent = label;
+    lightbox.classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeLightbox() {
+    lightbox.classList.remove('active');
+    document.body.style.overflow = '';
+    setTimeout(() => { lbImg.src = ''; }, 300);
+}
+
+document.getElementById('lb-close').addEventListener('click', closeLightbox);
+document.getElementById('lb-backdrop').addEventListener('click', closeLightbox);
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+
+// ── Data ──────────────────────────────────────────────────────────
+const nameMap = {
+    "00": "기본",
+    "01": "기본",     "02": "미소",       "03": "행복",           "04": "분노",         "05": "슬픔",
+    "06": "의문",     "07": "경멸",       "08": "피곤",           "09": "삐짐",         "10": "놀람",
+    "11": "부끄러움", "12": "유혹",       "13": "황홀",           "14": "두려움",       "15": "사과",
+    "16": "우쭐",     "17": "자위",       "18": "자위절정",       "19": "가슴애무",     "20": "가슴빨기",
+    "21": "핑거링",   "22": "핑거링2",    "23": "대딸1",          "24": "대딸2",        "25": "대딸사정",
+    "26": "풋잡1",    "27": "풋잡2",      "28": "풋잡사정",       "29": "정상위 준비",  "30": "꼬리대딸",
+    "31": "꼬리대딸사정", "32": "펠라1",  "33": "펠라2",          "34": "구강사정",     "35": "파이즈리",
+    "36": "파이즈리 사정", "37": "페이스시팅", "38": "정상위1",   "39": "정상위2",      "40": "정상위 사정",
+    "41": "후배위1",  "42": "후배위2",    "43": "후배위 사정",    "44": "기승위1",      "45": "기승위2",
+    "46": "기승위 사정", "47": "측위",    "48": "측위 사정",      "49": "좌위",         "50": "좌위 사정",
+    "51": "대면좌위", "52": "대면좌위 사정", "53": "보지벌려서 보여주기", "54": "필로우 토크", "55": "뒤에서 흡혈",
+    "56": "팔에서 흡혈", "57": "대면좌위 흡혈", "58": "대면좌위 흡혈 사정", "59": "잠자기",  "60": "딸기우유 마시기",
+    "61": "손가락 흡혈"
+};
+
+function pad(n) { return n.toString().padStart(2, '0'); }
+
+function buildGrid(containerId, type, start, end) {
+    const grid = document.getElementById(containerId);
+    for (let i = start; i <= end; i++) {
+        const numStr = pad(i);
+        const url    = `https://taneti.github.io/PBV/${type}/${numStr}.png`;
+        const label  = `${numStr}. ${nameMap[numStr] ?? `${type}_${numStr}`}`;
+
+        const card = document.createElement('div');
+        card.className = 'img-card';
+        card.style.animationDelay = `${(i % 24) * 25}ms`;
+        card.innerHTML = `
+            <div class="card-img-wrap">
+                <img src="${url}" alt="${label}" loading="lazy"
+                     onerror="this.closest('.img-card').style.display='none'">
+                <div class="card-overlay"><span>🔍</span></div>
+            </div>
+            <div class="card-label">${label}</div>
+        `;
+        card.addEventListener('click', () => openLightbox(url, label, card));
+        grid.appendChild(card);
+    }
+}
+
+buildGrid('grid-c', 'C', 0, 61);
+buildGrid('grid-n', 'N', 1, 61);
+</script>
 </body>
 </html>

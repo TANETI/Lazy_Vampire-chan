@@ -3,23 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>만사가 귀찮은 흡혈귀짱의 아카이브</title>
+    <title>Lazy Vampire-chan's Archives</title>
     <style>
         body {
             font-family: 'Garamond', 'Crimson Text', 'Malgun Gothic', serif;
-            background-color: #070202; /* 칠흑 같은 어둠 */
-            color: #e2c0c0; /* 바래진 장미빛 */
+            background-color: #070202;
+            color: #e2c0c0;
             margin: 0;
             padding: 40px 20px;
         }
 
         h1 {
             text-align: center;
-            color: #9e2a2b; /* 너무 무겁지 않으면서도 핏빛이 도는 색상이에요 */
+            color: #9e2a2b;
             font-size: 2.8rem;
             letter-spacing: 2px;
             margin-bottom: 50px;
-            /* 귀찮아하는 흡혈귀짱의 오우라 같은 은은한 발광 효과…! */
             text-shadow: 0 0 10px rgba(158, 42, 43, 0.6), 0 0 20px rgba(255, 0, 0, 0.2);
         }
 
@@ -65,12 +64,12 @@
             height: auto;
             border-radius: 4px;
             transition: transform 0.4s ease;
-            filter: grayscale(15%) brightness(85%); /* 살짝 몽환적이고 어두운 톤 */
+            filter: grayscale(15%) brightness(85%);
         }
 
         .img-card:hover img {
             transform: scale(1.04);
-            filter: grayscale(0%) brightness(100%); /* 마우스를 올리면 본래의 색이 선명해져요 */
+            filter: grayscale(0%) brightness(100%);
         }
 
         .img-card span {
@@ -88,7 +87,7 @@
 </head>
 <body>
 
-    <h1>🦇 만사가 귀찮은 흡혈귀짱</h1>
+    <h1>🦇 Lazy Vampire-chan</h1>
 
     <div class="section-title">† Type C Collection (00 ~ 61)</div>
     <div id="grid-c" class="grid-container"></div>
@@ -97,18 +96,22 @@
     <div id="grid-n" class="grid-container"></div>
 
     <script>
-        // 이전에 알려드린 이름 맵핑 객체에요. 
-        // 여기에 "번호": "원하는 이름" 형태로 채워 넣으시면 사이트에 반영돼요…!
-        const nameMapC = {
-            "00": "침대 밖은 위험해",
-            "01": "커튼 걷지 말아줘…",
-            // ... 계속 채워 넣으실 수 있어요
-        };
-
-        const nameMapN = {
-            "01": "빨대 꽂은 토마토주스",
-            "02": "낮잠 방해 금지",
-            // ... N 타입도 동일해요
+        // 요청해주신 인덱스용 이름 목록을 정확하게 매핑해두었어요
+        const nameMap = {
+            "00": "차원이동", // C타입 00번용 예외 처리
+            "01": "기본", "02": "미소", "03": "행복", "04": "분노", "05": "슬픔",
+            "06": "의문", "07": "경멸", "08": "피곤", "09": "삐짐", "10": "놀람",
+            "11": "부끄러움", "12": "유혹", "13": "황홀", "14": "두려움", "15": "사과",
+            "16": "우쭐", "17": "자위", "18": "자위절정", "19": "가슴애무", "20": "가슴빨기",
+            "21": "핑거링", "22": "핑거링2", "23": "대딸1", "24": "대딸2", "25": "대딸사정",
+            "26": "풋잡1", "27": "풋잡2", "28": "풋잡사정", "29": "정상위 준비", "30": "꼬리대딸",
+            "31": "꼬리대딸사정", "32": "펠라1", "33": "펠라2", "34": "구강사정", "35": "파이즈리",
+            "36": "파이즈리 사정", "37": "페이스시팅", "38": "정상위1", "39": "정상위2", "40": "정상위 사정",
+            "41": "후배위1", "42": "후배위2", "43": "후배위 사정", "44": "기승위1", "45": "기승위2",
+            "46": "기승위 사정", "47": "측위", "48": "측위 사정", "49": "좌위", "50": "좌위 사정",
+            "51": "대면좌위", "52": "대면좌위 사정", "53": "보지벌려서 보여주기", "54": "필로우 토크", "55": "뒤에서 흡혈",
+            "56": "팔에서 흡혈", "57": "대면좌위 흡혈", "58": "대면좌위 흡혈 사정", "59": "잠자기", "60": "딸기우유 마시기",
+            "61": "손가락 흡혈"
         };
 
         function pad(num) {
@@ -117,12 +120,13 @@
 
         const maxIndex = 61;
 
-        // C 타입 생성
+        // C 타입 생성 (00 ~ 61)
         const gridC = document.getElementById('grid-c');
         for (let i = 0; i <= maxIndex; i++) {
             const numStr = pad(i);
             const url = `https://taneti.github.io/PBV/C/${numStr}.png`;
-            const displayName = nameMapC[numStr] ? nameMapC[numStr] : `C_${numStr}`;
+            const label = nameMap[numStr] ? nameMap[numStr] : `C_${numStr}`;
+            const displayName = `${numStr}. ${label}`;
             
             const card = document.createElement('div');
             card.className = 'img-card';
@@ -133,17 +137,18 @@
             gridC.appendChild(card);
         }
 
-        // N 타입 생성
+        // N 타입 생성 (01 ~ 61)
         const gridN = document.getElementById('grid-n');
         for (let i = 1; i <= maxIndex; i++) {
             const numStr = pad(i);
             const url = `https://taneti.github.io/PBV/N/${numStr}.png`;
-            const displayName = nameMapN[numStr] ? nameMapN[numStr] : `N_${numStr}`;
+            const label = nameMap[numStr] ? nameMap[numStr] : `N_${numStr}`;
+            const displayName = `${numStr}. ${label}`;
             
             const card = document.createElement('div');
             card.className = 'img-card';
             card.innerHTML = `
-                <img src="${url}" alt="${displayName}" onerror="this.parentNode.style.with='none'; this.parentNode.style.display='none';">
+                <img src="${url}" alt="${displayName}" onerror="this.parentNode.style.display='none';">
                 <span>${displayName}</span>
             `;
             gridN.appendChild(card);

@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>만사가 귀찮은 흡혈귀짱의 아카이브</title>
+    <style>
+        body {
+            font-family: 'Garamond', 'Crimson Text', 'Malgun Gothic', serif;
+            background-color: #070202; /* 칠흑 같은 어둠 */
+            color: #e2c0c0; /* 바래진 장미빛 */
+            margin: 0;
+            padding: 40px 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #9e2a2b; /* 너무 무겁지 않으면서도 핏빛이 도는 색상이에요 */
+            font-size: 2.8rem;
+            letter-spacing: 2px;
+            margin-bottom: 50px;
+            /* 귀찮아하는 흡혈귀짱의 오우라 같은 은은한 발광 효과…! */
+            text-shadow: 0 0 10px rgba(158, 42, 43, 0.6), 0 0 20px rgba(255, 0, 0, 0.2);
+        }
+
+        .section-title {
+            max-width: 1200px;
+            margin: 40px auto 20px auto;
+            font-size: 1.4rem;
+            color: #800000;
+            border-bottom: 1px dashed #400c0c;
+            padding-bottom: 8px;
+            letter-spacing: 1px;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 25px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .img-card {
+            background: #140707;
+            padding: 12px;
+            border-radius: 6px;
+            border: 1px solid #230b0b;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.7);
+            text-align: center;
+            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .img-card:hover {
+            transform: translateY(-6px) scale(1.06);
+            background: #1f0b0b;
+            border-color: #9e2a2b;
+            box-shadow: 0 10px 20px rgba(158, 42, 43, 0.4); 
+        }
+
+        .img-card img {
+            width: 100%;
+            height: auto;
+            border-radius: 4px;
+            transition: transform 0.4s ease;
+            filter: grayscale(15%) brightness(85%); /* 살짝 몽환적이고 어두운 톤 */
+        }
+
+        .img-card:hover img {
+            transform: scale(1.04);
+            filter: grayscale(0%) brightness(100%); /* 마우스를 올리면 본래의 색이 선명해져요 */
+        }
+
+        .img-card span {
+            display: block;
+            margin-top: 10px;
+            font-size: 0.9rem;
+            color: #8c7373;
+            transition: color 0.3s;
+        }
+
+        .img-card:hover span {
+            color: #e2c0c0;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>🦇 만사가 귀찮은 흡혈귀짱</h1>
+
+    <div class="section-title">† Type C Collection (00 ~ 61)</div>
+    <div id="grid-c" class="grid-container"></div>
+
+    <div class="section-title">† Type N Collection (01 ~ 61)</div>
+    <div id="grid-n" class="grid-container"></div>
+
+    <script>
+        // 이전에 알려드린 이름 맵핑 객체에요. 
+        // 여기에 "번호": "원하는 이름" 형태로 채워 넣으시면 사이트에 반영돼요…!
+        const nameMapC = {
+            "00": "침대 밖은 위험해",
+            "01": "커튼 걷지 말아줘…",
+            // ... 계속 채워 넣으실 수 있어요
+        };
+
+        const nameMapN = {
+            "01": "빨대 꽂은 토마토주스",
+            "02": "낮잠 방해 금지",
+            // ... N 타입도 동일해요
+        };
+
+        function pad(num) {
+            return num.toString().padStart(2, '0');
+        }
+
+        const maxIndex = 61;
+
+        // C 타입 생성
+        const gridC = document.getElementById('grid-c');
+        for (let i = 0; i <= maxIndex; i++) {
+            const numStr = pad(i);
+            const url = `https://taneti.github.io/PBV/C/${numStr}.png`;
+            const displayName = nameMapC[numStr] ? nameMapC[numStr] : `C_${numStr}`;
+            
+            const card = document.createElement('div');
+            card.className = 'img-card';
+            card.innerHTML = `
+                <img src="${url}" alt="${displayName}" onerror="this.parentNode.style.display='none';">
+                <span>${displayName}</span>
+            `;
+            gridC.appendChild(card);
+        }
+
+        // N 타입 생성
+        const gridN = document.getElementById('grid-n');
+        for (let i = 1; i <= maxIndex; i++) {
+            const numStr = pad(i);
+            const url = `https://taneti.github.io/PBV/N/${numStr}.png`;
+            const displayName = nameMapN[numStr] ? nameMapN[numStr] : `N_${numStr}`;
+            
+            const card = document.createElement('div');
+            card.className = 'img-card';
+            card.innerHTML = `
+                <img src="${url}" alt="${displayName}" onerror="this.parentNode.style.with='none'; this.parentNode.style.display='none';">
+                <span>${displayName}</span>
+            `;
+            gridN.appendChild(card);
+        }
+    </script>
+</body>
+</html>
